@@ -27,6 +27,7 @@ let closeCart = document.querySelector('.close-cart')
 
 cartIcon.addEventListener('click', () => {
     cart.classList.add('display')
+    // document.body.style.backgroundColor = 'black'
     navMenu.style.display = 'none'
 })
 
