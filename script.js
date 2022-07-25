@@ -3,7 +3,6 @@ const navUl = document.getElementsByClassName('nav-items')[0];
 const navMenu = document.querySelector('.nav')
 
 toggleButton.addEventListener('click', () => {
-    // alert('fhfg')
     navUl.classList.toggle('active');
     document.body.classList.toggle("close");
     document.body.classList.toggle('hidden')
@@ -27,12 +26,14 @@ let closeCart = document.querySelector('.close-cart')
 
 cartIcon.addEventListener('click', () => {
     cart.classList.add('display')
-    // document.body.style.backgroundColor = 'black'
+    // document.body.classList.add('dark')
+    // document.body.style.zIndex = '-1'
     navMenu.style.display = 'none'
 })
 
 closeCart.addEventListener('click', () => {
     cart.classList.remove('display')
+    // document.body.classList.remove('dark')
     navMenu.style.display = 'flex'
 })
 
@@ -57,9 +58,14 @@ let addToCart = document.querySelectorAll('.add-to-cart')
 document.querySelector('.checkout').addEventListener('click', purchased)
 
 function deleteItem(e) {
+    let cartItemNames = document.querySelectorAll('.item-name')
+    let cartNumber = document.querySelector('.cart-number').textContent = cartItemNames.length - 1
+    let homeCartNumber = document.querySelector('.home-cart-number')
+    homeCartNumber.textContent = cartNumber
     let buttonClicked = e.target
         buttonClicked.parentElement.remove()
         updateTotal()
+        // reduceCartNumber()
 }
 
 function quantityChanged(e) {
@@ -68,12 +74,6 @@ function quantityChanged(e) {
         input.value = 1
     }
     updateTotal()
-    updateNumberOfItemsInCart()
-}
-
-function updateNumberOfItemsInCart() {
-    let itemNumber = document.querySelector('.item-quanity').textContent++
-    console.log(itemNumber)
 }
 
 function updateTotal () {
@@ -98,29 +98,41 @@ function addItemToCartClicked(e) {
     let price = Item.querySelector('.price .amount').textContent
     let img = Item.querySelector('.img-front').src
     let itemNumber = document.querySelector('.item-quanity').textContent
-    addItemToCart(name, price, img, itemNumber)
+    addItemToCart(name, price, img)
     updateTotal()
+    // updateCartNumber()
 }
 
-function addItemToCart(name, price, img, itemNumber) {
+// let currentCartNumber = 1;
+
+// function updateCartNumber() {    
+//     let cartNumber = document.querySelector('.cart-number').textContent = currentCartNumber++
+// }
+
+function addItemToCart(name, price, img) {
     let cartBox = document.createElement('div')
     let cartItems = document.querySelector('.cart-content')
     let cartItemNames = cartItems.querySelectorAll('.item-name')
-    // let itemNumber = cartItems.querySelector('.item-quanity')
-    // localStorage.getItem('CART')
+    let homeCartNumber = document.querySelector('.home-cart-number')
     for (let i = 0; i < cartItemNames.length; i++) {
         if (cartItemNames[i].textContent === name) {
             alert('item already in cart')
             return
-        }        
+        }          
     }
+    if (cartItemNames.length >= 0) {
+        homeCartNumber.style.display = 'block'
+        }
+        else {
+            homeCartNumber.style.display = 'none'
+        }
     let cartBoxItem = `
         <div class="cart-box">
             <img src="${img}" alt="" class="item-img">
             <div class="detail-box">
                 <div class="item-name">${name}</div>
                 <div class="cart-price">
-                    <span class="item-quantity">${itemNumber}</span>
+                    <span class="item-quantity">1</span>
                     <span class="x">x</span>
                     <span class="item-price">${price}</span>
                 </div>
@@ -128,16 +140,14 @@ function addItemToCart(name, price, img, itemNumber) {
             </div>
             <img src="./images/icons8-trash-30.png" alt="" class="cart-remove">
         </div>`
-        // let inputValue = cartItems.querySelector('.cart-quantity')
-    // cartNumber.style.display = "flex"; 
-    // console.log(itemNumber)
+    let cartNumber = document.querySelector('.cart-number').textContent = cartItemNames.length + 1
+    homeCartNumber.textContent = cartNumber
     cartBox.innerHTML = cartBoxItem
     cartItems.append(cartBox)
     cartBox.getElementsByClassName('cart-remove')[0].addEventListener('click', deleteItem)
     cartBox.getElementsByClassName('cart-quantity')[0].addEventListener('change', quantityChanged)
-    // localStorage.setItem('CART', JSON.stringify(cartBoxItem))
-    // console.log(localStorage)
-}
+    // updateCartNumber()
+} 
 
 function purchased() {
     alert('Thank you for your purchase')
